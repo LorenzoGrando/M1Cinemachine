@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(BoxCollider))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
     private float speed;
     private Animator animator;
+    private BoxCollider col;
 
     private bool isMoving;
     private bool isSliding;
@@ -16,12 +18,13 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        col = GetComponent<BoxCollider>();
     }
 
     void Update()
     {
         MovePlayer();
-        TryUnslide();
+        TryUnslideCollider();
         UpdateAnimator();
     }
 
@@ -39,18 +42,18 @@ public class PlayerMovement : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space)) {
             isSliding = true;
+            col.center += Vector3.up;
         }
 
 
         transform.Translate(inputDirection.normalized * speed * Time.deltaTime );
     }
 
-    private void TryUnslide() {
-        /*
-        if(isSliding & !Input.GetKey(KeyCode.Space)) {
+    private void TryUnslideCollider() {
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("OnSlideEnd")) {
+            col.center -= Vector3.up;
             isSliding = false;
         }
-        */
     }
 
     private void UpdateAnimator() {
@@ -59,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("Slide");
         }
         animator.SetBool("IsPraying", isPraying);
-
         isSliding = false;
     }
 }
