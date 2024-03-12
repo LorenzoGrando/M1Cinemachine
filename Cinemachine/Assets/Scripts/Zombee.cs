@@ -11,6 +11,8 @@ public class Zombee : MonoBehaviour
     [SerializeField]
     private bool isCrawler = false;
 
+    [SerializeField]
+    private bool forceWalkerMode = false;
     private PlayerMovement player;
 
     private Animator animator;
@@ -19,7 +21,7 @@ public class Zombee : MonoBehaviour
     {
         int number = UnityEngine.Random.Range(1,6);
 
-        if(number <= 3) {
+        if(number <= 3 && !forceWalkerMode) {
             isCrawler = true;
         }
         SetupAnimator();

@@ -6,25 +6,29 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField]
-    private float speed;
+    public float speed;
     private Animator animator;
     private BoxCollider col;
 
-    private bool isMoving;
+    public bool isMoving;
     private bool isSliding;
-    private bool isPraying;
+    public bool isPraying;
+
+    public bool hasSelfControl;
 
     void Start()
     {
+        hasSelfControl = true;
         animator = GetComponent<Animator>();
         col = GetComponent<BoxCollider>();
     }
 
     void Update()
     {
-        MovePlayer();
-        TryUnslideCollider();
+        if(hasSelfControl) {
+            MovePlayer();
+            TryUnslideCollider();
+        }
         UpdateAnimator();
     }
 
